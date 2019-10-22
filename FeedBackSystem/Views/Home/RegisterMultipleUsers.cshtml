@@ -1,0 +1,341 @@
+﻿@model IEnumerable<FeedBackSystem.Model.DtoModels.RegisterMutlipleUsers>
+@{
+    ViewBag.Title = "RegisterMultipleUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .table {
+            border: 1px solid ridge;
+            border-collapse: collapse;
+            color: #505d61;
+            width:50%;
+        }
+
+            .table th {
+                background-color: slategray;
+                color: white;
+                font-weight: bold;
+            }
+
+            .table th, .table td {
+                padding: 5px;
+                border: 1px solid #ccc;
+            }
+
+        .btn {
+            margin-top:15px;
+            background-color: #423B88;
+            color: white;
+        }
+            .btn:hover {
+                background-color: #398439;
+                
+            }
+            #addbtn
+            {
+                color:white;
+            }
+            #p1 {
+            color:slateblue;
+            font-family: Bahnschrift;
+            font-size: 18px;
+        }
+        form label {
+            display: inline-block;
+            width: 100px;
+        }
+
+
+        .error {
+            color: red;
+            margin-left: 5px;
+        }
+
+        label.error {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="div1"></div>
+    <br />
+    <div>
+        <p id="p1"><span class="glyphicon glyphicon-share-alt"></span> &nbsp;&nbsp;&nbsp; <b>      click to register multiple user's </b>...</p>
+    </div>
+    <br />
+    <div><button id="addbtn" class="btn">Add Multiple User</button></div>
+    <br />
+    <br />
+    <table id="tblCustomers" class="table" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th style="width:150px">Email</th>
+                <th style="width:150px">Password</th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@user.Password </td>
+                    @*<td>@user.ConfirmPassword</td>*@
+                    <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
+                </tr>
+            }
+        </tbody>
+        <tfoot id="tfoot">
+            <tr>
+                <td><input type="text" id="txtEmail" /></td>
+                <td><input type="text" id="txtPassword" /></td>
+                @*<td><input type="text" id="txtConfirmPassword" /></td>*@
+                <td><input type="button" id="btnAdd" value="Save" /></td>
+            </tr>
+        </tfoot>
+    </table>
+    <br />
+
+    <div id="f1">
+        @using (Ajax.BeginForm("Import", "Home", new AjaxOptions { HttpMethod = "Post" }, new { enctype = "multipart/form-data", @id = "form0" }))
+        {
+            @Html.Raw(ViewBag.Error);
+            <div>
+                <div>
+                    select excel file:
+                    <input type="file" class="btn btn-success" name="excelFile" />
+                </div>
+                <br />
+                <input type="submit" class="btn btn-success" value="Fill  New User's" />
+            </div>
+        }
+
+    </div>
+    <input type="button" class="btn" id="btnSave" value="Register All" />&nbsp;&nbsp;&nbsp; <a id="searchbyexcel" class="btn btn-primary">Register by Excel</a>
+    <br />
+    <br /><br /><br />
+    <div class="row" id="result">
+        <div class="col-md-4">
+            <table id="success">
+                <thead>
+                    <tr><td>Successfully Registered Users</td></tr>
+                </thead>
+                <tbody id="tfoot1"></tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table id="failed">
+                <thead>
+                    <tr><td>Un-successfully Registered Users</td></tr>
+                </thead>
+                <tbody id="tfoot2"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#tblCustomers ').hide();
+        $('#btnSave ').hide();
+        $('#searchbyexcel ').hide();
+        $('#result').hide();
+        $('#addbtn').click(function () {
+            $('#tblCustomers').toggle();
+            $('#btnSave ').toggle();
+            $('#searchbyexcel ').toggle();
+
+        });
+
+        $('#f1').hide();
+        $('#searchbyexcel').click(function () {
+            $('#f1').toggle();
+
+        });
+
+        $(function () {
+            $("#form0").submit(function (event) {
+                var dataString;
+                event.preventDefault();
+                var action = $("#form0").attr("action");
+                if ($("#form0").attr("enctype") == "multipart/form-data") {
+                    dataString = new FormData($("#form0").get(0));
+                    contentType = false;
+                    processData = false;
+                } else {
+
+                }
+                $.ajax({
+                    type: "POST",
+                    url: action,
+                    data: dataString,
+                    dataType: "json",
+                    contentType: contentType,
+                    processData: processData,
+                    success: function (data) {
+                        var i;
+                        var j;
+                        for (i = 0; i < data.length; i++) {
+
+                            var tBody = $("#tblCustomers > TBODY ")[0];
+
+
+                            var row = tBody.insertRow(-1);
+
+
+                            cell = $(row.insertCell(-1));
+                            var email = $("<input />");
+                            email.attr("type", "text");
+                            email.val(data[i].Email);
+                            cell.append(email);
+
+
+                            var cell = $(row.insertCell(-1));
+                            var password = $("<input />");
+                            password.attr("type", "text");
+                            password.val(data[i].Password);
+                            cell.append(password);
+
+
+                            //var cell = $(row.insertCell(-1));
+                            //cell.html(data[i].ConfirmPassword);
+
+
+                            cell = $(row.insertCell(-1));
+                            var btnRemove = $("<input />");
+                            btnRemove.attr("type", "button");
+                            btnRemove.attr("onclick", "Remove(this);");
+                            btnRemove.val("Remove");
+                            cell.append(btnRemove);
+                        }
+                        $('#f1').hide();
+                        $('#tblCustomers').show();
+                        alert("please check all credentials before register!");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("fail");
+                    }
+                });
+            });
+        });
+
+
+        $("body").on("click", "#btnAdd", function () {
+            //hidding
+            $('tfoot').hide();
+            //Reference the Name and Country TextBoxes.
+
+            var txtEmail = $("#txtEmail");
+            var txtPassword = $("#txtPassword");
+            // var txtConfirmPassword = $("#txtConfirmPassword");
+
+            //Get the reference of the Table's TBODY element.
+            var tBody = $("#tblCustomers > TBODY")[0];
+
+            //Add Row.
+            var row = tBody.insertRow(-1);
+
+            //Add Email cell.
+            cell = $(row.insertCell(-1));
+            cell.html(txtEmail.val());
+
+            //Add password cell.
+            cell = $(row.insertCell(-1));
+            cell.html(txtPassword.val());
+
+            //Add C-password cell.
+            //cell = $(row.insertCell(-1));
+            //cell.html(txtConfirmPassword.val());
+
+            //Add Button cell.
+            cell = $(row.insertCell(-1));
+            var btnRemove = $("<input />");
+            btnRemove.attr("type", "button");
+            btnRemove.attr("onclick", "Remove(this);");
+            btnRemove.val("Remove");
+            cell.append(btnRemove);
+
+            //Clear the TextBoxes.
+
+            txtEmail.val("");
+            txtPassword.val("");
+            // txtConfirmPassword.val("");
+        });
+
+        function Remove(button) {
+            //Determine the reference of the Row using the Button.
+            var row = $(button).closest("TR");
+            var name = $("TD", row).eq(0).html();
+            if (confirm("Do you want to delete: " + name)) {
+                //Get the reference of the Table.
+                var table = $("#tblCustomers")[0];
+
+                //Delete the Table row using it's Index.
+                table.deleteRow(row[0].rowIndex);
+            }
+        };
+
+        $("body").on("click", "#btnSave", function () {
+            //Loop through the Table rows and build a JSON array.
+            var Users = new Array();
+            $("#tblCustomers TBODY TR").each(function () {
+                var row = $(this);
+                var User = {};
+                User.Email = row.find("TD input").eq(0).val();
+                User.Password = row.find("TD input").eq(1).val();
+                //  User.ConfirmPassword = row.find("TD").eq(2).html();
+                Users.push(User);
+            });
+            if (Users.length < 1) {
+                $('#div1').html('<h4 class="error">Please enter User Credentials..</h4>');
+            }
+            else {
+                $(".error").empty();
+
+                //Send the JSON array to Controller using AJAX.
+                $.ajax({
+                    type: "POST",
+                    url: "/Account/RegisterAllAsync",
+                    data: JSON.stringify(Users),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result1, result2) {
+
+                        if (result1 != null || result2 != null) {
+
+                            $.template('s', '<tr><td style="color:forestgreen">${Email}</td></tr>');
+                            $.tmpl('s', result1.SuccessfullyRegistered).appendTo('#tfoot1');
+                            $.template('s1', '<tr><td style="color:red">${Email}</td></tr>');
+                            if (result2 != null) {
+                                $.tmpl('s1', result1.FailedToRegister).appendTo('#tfoot2');
+                                $('#failed').show();
+                            }
+                            $('#failed').hide();
+
+                            alert(" Registered  Successfully!");
+                            $('#tblCustomers').hide();
+                            $('#result').show();
+                        }
+
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>
+
+
+

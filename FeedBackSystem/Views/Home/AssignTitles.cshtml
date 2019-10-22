@@ -1,0 +1,206 @@
+﻿
+@{
+    ViewBag.Title = "AssignTitles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html >
+<head>
+    <title></title>
+    <style>
+
+    .scroll
+    {
+        overflow:auto;
+        height:auto;
+    }
+
+        ol {
+            list-style-type: none;
+            width: 135px;
+            height: 480px;
+           
+        }
+
+        .k li {
+            height: 30px;
+            width: 150px;
+            border: 1px solid white;
+            margin: 2px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #Users li {
+            background-color: #423B88;
+            color: white;
+            padding: 5px;
+        }
+
+        #Titles li {
+            background-color: #423B88;
+            color: white;
+            padding: 5px;
+        }
+
+        fieldset {
+            float: left;
+            margin: 30px;
+            width: 180px;
+            height: 380px;
+            border: 1px solid black;
+        }
+
+        #b button {
+            width: 141px;
+            height: 34px;
+            background-color: #5cb85c;
+            border-radius: 8px;
+        }
+
+
+        form label {
+            display: inline-block;
+            width: 100px;
+        }
+
+
+        .error {
+            color: red;
+            margin-left: 5px;
+        }
+
+        label.error {
+            display: inline;
+        }
+        
+
+        b {
+            font-weight: bold;
+            margin-left: 26px;
+            font-size: 13px;
+        }
+        legend {
+            display: block;
+            width: 79%;
+            padding: 0;
+            margin-bottom: 20px;
+            font-size: 21px;
+            line-height: inherit;
+            color: #333;
+            border: -8px;
+            border-bottom: 1px solid #e5e5e5;
+            margin-left: 26px;
+        }
+        .btn {
+            background-color: #423B88;
+            margin-left: 83px;
+            margin-top: 45px;
+            width: 135px;
+        }
+    </style>
+
+
+    <script>
+        $(document).ready(function () {
+
+
+            $('#Users').sortable({ connectWith: "#SelectedUsers" });
+            $('#SelectedUsers').sortable({ connectWith: "#Users" });
+            $('#Titles').sortable({ connectWith: "#SelectedTitles" });
+            $('#SelectedTitles').sortable({ connectWith: "#Titles" });
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/GetAllUsers",
+                success: function (result) {
+                    $.template('newData1', '<br><li class="k" id="${UserId}">${User}</li>');
+                    $.tmpl('newData1', result).appendTo('#Users');
+
+                }
+            })
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/AllTitles",
+                success: function (result) {
+                    $.template('newData2', '<br><li class="k" id="${TitleId}">${Title}</li>');
+                    $.tmpl('newData2', result).appendTo('#Titles');
+
+                }
+            })
+        });
+
+        function AssignTitles() {
+            var AssignedTitles = new Array();
+            $("#f3 ol li").each(function () {
+                var row = $(this);
+                $("#f4 ol li ").each(function () {
+                    var title = {};
+                    title.UserId = row.attr("id");
+                    title.TitleId = $(this).attr("id");
+                    AssignedTitles.push(title);
+                });
+
+            });
+
+            if (AssignedTitles.length < 1) {
+                $('#div1').html('<span class="error">please Assign Forms to the Users</span>');
+            }
+            else {
+                $(".error").empty();
+
+                $.ajax({
+                    type: "Post",
+                    url: "/Home/SaveSelectedUsers",
+                    data: JSON.stringify(AssignedTitles),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        alert("Successfully assigned.");
+                        window.location.href = "/Home/Index";
+
+
+                    }
+                })
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <div id="div1"></div>
+    <div class="row">
+        <div class=" col-md-2">
+            <fieldset class="scroll" id="f1">
+                <legend><b>Users</b></legend>
+                <ol id="Users"></ol>
+            </fieldset>
+            </div>
+            <div class=" col-md-2">
+                <fieldset class="scroll" id="f2">
+                    <legend><b>Titles</b></legend>
+                    <ol id="Titles"></ol>
+                </fieldset>
+                </div>
+                <div class=" col-md-2">
+                    <fieldset class="scroll" id="f3">
+                        <legend><b>Selected Users</b></legend>
+                        <ol id="SelectedUsers"></ol>
+                    </fieldset>
+                    </div>
+                    <div class=" col-md-2">
+                        <fieldset class="scroll" id="f4">
+                            <legend><b>Selected Titles</b></legend>
+                            <ol id="SelectedTitles"></ol>
+                        </fieldset>
+                        </div>
+                        <div class=" col-md-2">
+                            <button href="#" onclick="AssignTitles()" class="btn btn-success" id="b">Assign Titles</button>
+                        </div>
+        </div>
+</body>
+</html>
+
+
+

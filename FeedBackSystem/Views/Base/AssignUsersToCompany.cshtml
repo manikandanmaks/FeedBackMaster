@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "AssignUsersToCompany";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <title></title>
+    <style>
+
+        .scroll {
+            overflow: auto;
+            height: auto;
+        }
+
+        ol {
+            list-style-type: none;
+            width: 135px;
+            height: 480px;
+            padding:0px;
+        }
+
+
+        .k li {
+            height: 30px;
+            width: 150px;
+            border: 1px solid white;
+            margin: 2px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #Users li {
+            background-color: #423B88;
+            color:white;
+        }
+
+        #Admin li {
+            background-color: #423B88;
+            color: white;
+        }
+
+        #Companies li {
+            background-color: #423B88;
+            color: white;
+            padding: 5px;
+        }
+
+        fieldset {
+            float: left;
+            margin: 30px;
+            width: 180px;
+            height: 380px;
+            border: 1px solid black;
+        }
+
+        #b button {
+            width: 141px;
+            height: 34px;
+            background-color: rebeccapurple;
+            border-radius: 8px;
+            margin-left:55px;
+        }
+        .btn {
+            margin-left: 55px;
+            margin-top: 39px;
+            padding: 11px;
+            width: 110px;
+            background-color: #423B88;
+        }
+
+        form label {
+            display: inline-block;
+            width: 100px;
+        }
+
+
+        .error {
+            color: red;
+            margin-left: 5px;
+        }
+
+        label.error {
+            display: inline;
+        }
+        .lgnd
+        {
+            font-size:11px;
+        }
+        .select 
+        {
+            margin:0px;
+        }
+        b{
+            margin:25px;
+        }
+    </style>
+
+
+    <script>
+        $(document).ready(function () {
+
+
+            //$('#Users').sortable({ connectWith: "#SelectedUsers" });
+            $('#Admin').sortable({ connectWith: "#SelectedUsers" });
+            //$('#SelectedUsers').sortable({ connectWith: "#Users" });
+            $('#SelectedUsers').sortable({ connectWith: "#Admin" });
+            $('#Companies').sortable({ connectWith: "#SelectedCompany" });
+            $('#SelectedCompany').sortable({ connectWith: "#Companies" });
+
+            //$.ajax({
+            //    type: "GET",
+            //    url: "/Base/GetAllUsers2",
+            //    success: function (result) {
+            //        $.template('newData1', '<br><li class="k" id="${UserId}">${User}</li>');
+            //        $.tmpl('newData1', result).appendTo('#Users');
+
+            //    }
+            //})
+
+            $.ajax({
+                type: "GET",
+                url: "/Base/GetAllAdmin",
+                success: function (result) {
+                    $.template('newData2', '<br><li class="k" id="${UserId}">${User}</li>');
+                    $.tmpl('newData2', result).appendTo('#Admin');
+
+                }
+            })
+
+            $.ajax({
+                type: "GET",
+                url: "/Base/GetAllCompany",
+                success: function (result) {
+                    $.template('newData2', '<br><li class="k" id="${CompanyId}">${Company}</li>');
+                    $.tmpl('newData2', result).appendTo('#Companies');
+
+                }
+            })
+        });
+
+        function AssignRole() {
+            var AssignedRole = new Array();
+            $("#f4 ol li").each(function () {
+                var row = $(this);
+                $("#f5 ol li ").each(function () {
+                    var title = {};
+                    title.UserId = row.attr("id");
+                    title.CompanyId = $(this).attr("id");
+                    AssignedRole.push(title);
+                });
+
+            });
+
+            if (AssignedRole.length < 1) {
+                $('#div1').html('<span class="error">please Assign users to the company</span>');
+            }
+            else if (AssignedRole.length > 1) {
+                $('#div1').html('<span class="error">please Assign a single company to Users</span>');
+            }
+            else {
+                $(".error").empty();
+
+                $.ajax({
+                    type: "Post",
+                    url: "/Base/AssignCompany",
+                    data: JSON.stringify(AssignedRole),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        alert("Successfully assigned.");
+                        window.location.href = "/Base/AssignUsersToCompany";
+
+
+                    }
+                })
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <div id="div1"></div>
+    <div class="row">
+        @*<div class=" col-md-2">
+            <fieldset class="scroll" id="f1">
+                <legend><b>Users</b></legend>
+                <ol id="Users"></ol>
+            </fieldset>
+        </div>*@
+        <div class="col-md-2 ">
+            <fieldset class="scroll" id="f2" style="padding:34px;">
+                <legend class="lgnd"><b>Admin</b></legend>
+                <ol id="Admin"></ol>
+            </fieldset>
+        </div>
+        <div class=" col-md-2 ">
+            <fieldset class="scroll" id="f3"style="padding:34px;">
+                <legend class="lgnd"><b>Companies</b></legend>
+                <ol id="Companies"></ol>
+            </fieldset>
+        </div>
+        <div class=" col-md-2 ">
+            <fieldset class="scroll" id="f4"style="padding:34px;">
+                <legend class="lgnd"><b class="select">Selected Admin</b></legend>
+                <ol id="SelectedUsers"></ol>
+            </fieldset>
+        </div>
+        <div class=" col-md-2">
+            <fieldset class="scroll" id="f5"style="padding:34px;">
+                <legend class="lgnd"><b class="select">Selected Companies</b></legend>
+                <ol id="SelectedCompany"></ol>
+            </fieldset>
+        </div>
+        <div class=" col-md-2">
+            <button href="#" onclick="AssignRole()" class="btn btn-success" id="b">Assign </button>
+        </div>
+    </div> 
+    
+</body>
+</html>

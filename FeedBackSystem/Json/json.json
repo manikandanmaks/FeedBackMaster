@@ -1,0 +1,63 @@
+[
+  {
+    "pageUrl": "/Home/Index",
+    "title": "Admin Home Page",
+    "pagecontent": "Click This Button to Create A You can add New FEED BACK Forms You can Create  new User's You can assign Forms To User You can view the Assigned Form Details Click This Button to Create A New FeedBack FormADD FEEDBACK FORM Click This Button to Assign ASSIGN FORM TO USERS Assigned Forms Details FORM'S Per USER User Name Form No Of Times Assigned"
+  },
+  {
+    "pageUrl": "/Home/AddTitles",
+    "title": "AddTitles",
+    "pagecontent": "STEP 1: Enter the  New Title For  FeedBack Form Proceed To Step 2 STEP 2 Assign Feed Back Forms To the Users Instruction Enter the  New Question For  FeedBack Form  Next Click Add Button To Save Question Next Click  Add New Question Button to add new  Question  Finally Click Save All Question button to save the Questions Add New Question Question Save All Questions"
+
+  },
+  {
+    "pageUrl": "/Home/AssignTitles",
+    "title": "AssignTitles",
+    "pagecontent": "Users Titles Selected Users Selected Titles Assign Titles"
+  },
+  {
+    "pageUrl": "/Home/FeedBackForm",
+    "title": "FeedBackForm",
+    "pagecontent": "Title Buttons To to Fill Feed Back Form Forms Question Comment Rating Submit FeedBack"
+  },
+  {
+    "pageUrl": "/Home/Forms",
+    "title": "FormList",
+    "pagecontent": "Add a new Question Forms Question Edit Delete Are You Sure? You Want To Delete This Question. Cancle Confirm Save"
+  },
+  {
+    "pageUrl": "/Home/GetFormsPerUser",
+    "title": "Form's Per User",
+    "pagecontent": "Form List Per User"
+  },
+  {
+    "pageUrl": "/Home/RegisterMultipleUsers",
+    "title": "Register multiple Users",
+    "pagecontent": "click to register multiple user's Add Multiple User  Email Password Remove Save Import Fill  New User's  Register All Register by Excel  Successfully Registered Users Un-successfully Registered Users"
+  },
+  {
+    "pageUrl": "/Home/Reports",
+    "title": "Form Reports",
+    "pagecontent": "Forms"
+  },
+  {
+    "pageUrl": "/Home/Users",
+    "title": "Users List",
+    "pagecontent": "Add a new New User   Edit Delete Are You Sure? You Want To Delete This User. Cancle Confirm Save"
+  },
+  {
+    "pageUrl": "/Base/AssignRolesToUsers",
+    "title": "Assign Roles To Users",
+    "pagecontent": "Users Roles Selected Users Selected Role Assign "
+  },
+  {
+    "pageUrl": "/Base/AssignUsersToCompany",
+    "title": "Assign Users To Company",
+    "pagecontent": "Companies Admin Selected Admin Selected Companies Assign "
+  },
+  {
+    "pageUrl": "/Base/MasterPage",
+    "title": "MasterPage",
+    "pagecontent": "You can Create a New Company You can Create  New  Administrator's You can Assign Admin to Company Create New company Enter New CompanyName Save Company cancel Click This Button to Assign  Admin's to Company Assign Admin's to company "
+  }
+]

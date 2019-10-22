@@ -1,0 +1,216 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Create A New FeedBack Form</title>
+    <style>
+
+        #p1 {
+            color: #00052C;
+            font-family: Bahnschrift;
+            font-size: 18px;
+        }
+
+        #tab {
+            margin-left: 387px;
+        }
+
+        #Assignedtab {
+            margin-top: 33px;
+        }
+
+        .btn-success {
+            color: #fff;
+            background-color: #423B88;
+            border-color: #423B88;
+        }
+
+        .slide-content {
+            padding-top: 180px;
+           text-size-adjust: 50%;
+            font: 35px Montserrat, sans-serif;
+        }
+        p:hover {
+            animation: shake 0.5s;
+            animation-iteration-count: infinite;
+        }
+
+        @@-webkit-keyframes shake {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(3px, 1px) rotate(-1deg);
+            }
+
+            80% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <link href="~/Scripts/paging.css" rel="stylesheet" />
+
+    <script src="~/Scripts/paging.js"></script>
+    <script src="~/Scripts/script.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+          //  $(".hs").hide();
+            $.ajax({
+                type: "GET",
+                url: "/Home/GetAssignedForms",
+                success: function (result) {
+                    console.log(result);
+                    $.template('newData2', '<tr><td>${UserName}</td><td>${title}</td><td>${countoftitle}</td></tr>');
+                    $.tmpl('newData2', result).appendTo('#assignedforms');
+                    $('#tbldata').paging({ limit: 2 });
+                }
+            })
+
+            $(".slide_box").init_slide();
+
+        });
+
+        //$(".slide-content").click(function ()
+        //{
+        //    $(".sh").hide();
+        //    $(".hs").show();
+        //}
+        //    );
+
+    </script>
+</head>
+<body>
+    @*<div class="slider" style="height:100vh;">
+            <ul class="viewport">
+                <li class="sitem" style="background:#e25353"></li>
+                <li class="sitem" style="background:#ffe96c"></li>
+                <li class="sitem" style="background:#77f582"></li>
+                <li class="sitem" style="background:#4bf5f5"></li>
+                <li class="sitem" style="background:#7c5fff"></li>
+            </ul>
+        </div>*@
+    <br />
+    <br />
+    <div class="sh">
+        <div class="slide_box">
+            <ul class="slide_pic">
+                <li style="text-align:center;color:#423B88"><p class="slide-content">You can add New FEED BACK Forms</p></li>
+                <li style="text-align:center;color:#423B88"><p class="slide-content">You can Create  new User's</p></li>
+                <li style="text-align:center;color:#423B88"><p class="slide-content">You can assign Forms To User</p></li>
+                <li style="text-align:center;color:#423B88"><p class="slide-content">You can view the Assigned Form Details</p></li>
+
+            </ul>
+            <ul class="slide_tab"></ul>
+            <a href="javascript:" class="slide_nav slide_prev" style="color:#423B88">&lt;</a>
+            <a href="javascript:" class="slide_nav slide_next" style="color:#423B88">&gt;</a>
+        </div>
+    </div>
+    <br /><br /><br /><br /><br /><br /><br /><br />
+    <div class="hs">
+        <div class="row">
+
+            <br />
+            <br />
+            <br />
+
+            <div class="col-md-4">
+                <p class="btn btn-" id="p1"> <span class="glyphicon glyphicon-share-alt"></span> &nbsp;&nbsp;&nbsp;Click This Button to Create A <br /> <b> New FeedBack Form</b>...</p>
+            </div>
+            <div class="col-md-4">@Html.ActionLink("ADD FEEDBACK FORM", "AddTitles", "Home", new { @class = "btn btn-success" })</div>
+            <br />
+            <br />
+            <br />
+        </div>
+        <br />
+        <br />
+        <br />
+        <hr>
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <p id="p1"> &nbsp; <span class="glyphicon glyphicon-share-alt"></span>   &nbsp;&nbsp;&nbsp;  Click This Button to Assign  <b>FeedBack Form</b> to <b>Users</b>...</p>
+            </div>
+            <br />
+            <br />
+            <div class="col-md-4">@Html.ActionLink("ASSIGN FORM TO USERS", "AssignTitles", "Home", new { @class = "btn btn-success" })</div>
+            <br />
+            <br />
+
+            <br />
+        </div>
+        <hr>
+        <div class="row">
+
+            <div id="Assignedtab" class="col-md-4">
+                <p class="btn btn-" id="p1"><span class="glyphicon glyphicon-share-alt"></span> &nbsp;&nbsp;&nbsp; <b>      Assigned Forms Details</b>...</p>
+            </div>
+
+            <br /><br />
+            <br />
+            <br />
+            <div id="tab" class="col-md-4">
+
+                <div>
+                    @Html.ActionLink("FORM'S Per USER", "GetFormsPerUser", "Home", new { @class = "btn btn-success" })
+                </div>
+                <br />
+
+                <table style="border-radius:30px" id="tbldata" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="background-color: #423B88;color:aliceblue">User Name</th>
+                            <th style="background-color: #423B88;color:aliceblue">Form</th>
+                            <th style="background-color: #423B88;color:aliceblue">No Of Times Assigned</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assignedforms"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

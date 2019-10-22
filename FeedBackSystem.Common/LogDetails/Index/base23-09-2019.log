@@ -1,0 +1,2 @@
+2019-09-23 15:54:10,154 [10] ERROR FeedBackSystem.Models.CreateLog - System.DivideByZeroException: Attempted to divide by zero.
+   at FeedBackSystem.Controllers.BaseController.Index() in D:\FeedBackSystem\FeedBackSystem\Controllers\BaseController.cs:line 19

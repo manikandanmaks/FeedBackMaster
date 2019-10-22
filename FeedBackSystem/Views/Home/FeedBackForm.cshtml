@@ -1,0 +1,272 @@
+﻿@model FeedBackSystem.Model.DtoModels.AssignedTitles
+@{
+    ViewBag.Title = "FeedBackForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    
+    <style type="text/css">
+        .btn {
+            color: white;
+            background-color: #423B88;
+            width:155px;
+            border-color:black;
+        }
+        .p1 {
+            color: slateblue;
+            font-family: Bahnschrift;
+            font-size: 20px;
+            margin-left: 40px;
+        }
+
+        legend {
+            display: block;
+            width: 64%;
+            padding: 0;
+            margin-bottom: 20px;
+            font-size: 21px;
+            line-height: inherit;
+            color: #333;
+            border: -8px;
+            border-bottom: 1px solid #e5e5e5;
+            margin-left: 31px;
+        }
+        fieldset {
+            float: left;
+            margin: 30px;
+            width: 180px;
+            height: 380px;
+            border: 1px solid black;
+        }
+
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .table {
+            border-collapse: collapse;
+            color: #5cb85c;
+            margin-top:50px;
+        }
+
+        form label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        form div {
+            margin-bottom: 10px;
+        }
+
+        .error {
+            color: red;
+            margin-left: 5px;
+        }
+
+        label.error {
+            display: inline;
+        }
+        
+        .table th {
+            background-color: slategray;
+            color: white;
+            font-weight: bold;
+        }
+
+        .table th, .table td {
+            padding: 10px;
+        }
+
+        .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+            padding: 30px;
+            line-height: 1.42857143;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+  
+
+        <div class="row">
+
+
+            <div class="col-md-4">
+
+                <br />
+                <br /> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                <p class="p1"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;&nbsp; <b>Title Buttons To</b> to Fill Feed Back Form </p>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+
+
+                <fieldset>
+                    <legend><b style="margin-left:25px">Forms</b></legend>
+                    <div class="title">
+                    </div>
+                </fieldset>
+            </div>
+            <br />
+            <br /> <br />
+            <br /> <br />
+            <br />
+            <div class="col-md-4">
+                <div class="noform"></div>
+                <div class="form">
+
+                    <table id="tblQuestions" class="table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th style="width:150px">Question</th>
+                                <th style="width:150px"> Comment </th>
+                                <th style="width:150px"> Rating </th>
+                            </tr>
+                        </thead>
+                        <tbody id="body1"></tbody>
+
+                    </table>
+                    <div id="#div1"></div>
+                    <div class="form-group">
+                        <a href="#" class="btn btn-block btn-success" id="Saveform">Submit FeedBack</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var id1 = 0;
+            $('.title').show();
+            $('.form').hide();
+            $('.noform').hide();
+
+            $(document).ready(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/GetTitles",
+                    success: function (result) {
+
+
+                        $.template('newData', '&nbsp;&nbsp;&nbsp;&nbsp;<a id="t_${TitleId}" class="btn btn-success" onclick="GetForm( ${TitleId})"><span>${Title}</span></a><br /><br />');
+                        $.tmpl('newData', result).appendTo('.title');
+
+
+
+                    }
+                })
+
+            });
+            function GetForm(TitleId) {
+                if (id1 == 0) {
+                    id1 = TitleId;
+                }
+                console.log(id1);
+                var url = "/Home/GetForm?TitleId=" + TitleId;
+
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function (result) {
+
+                        console.log(result);
+                        $.template('newData1', '<tr>\
+                                            <td class="UserId"><input type="hidden"  name="UserId" value="${QuestionId}"/></td>\
+                                            <td><label>${Question}</label></td><br/><br/>\
+                                            <td><input type="text" name="Comment" placeholder="Comment"/></td>&nbsp;&nbsp;&nbsp;&nbsp;<td><input type="text" name="Rating" placeholder="Rating"/> Out Of 5</td>\
+                       </tr><br/>');
+                        $("#body1").empty();
+                        if (result.length >= 1) {
+                            $.tmpl('newData1', result).appendTo('#body1');
+                            $('.form').show();
+                            $('.noform').hide();
+
+                        }
+                        else {
+                            $('.form').hide();
+                            $('.noform').html('<h4 class="error">No questions for this Form</h4>').show();
+                        }
+                        $('.UserId').hide();
+                       
+                    }
+                })
+            }
+
+
+            $('#Saveform').click(function () {
+                //Loop through the Table rows and build a JSON array.
+                console.log(id1);
+                var Users = new Array();
+                $("#tblQuestions TBODY TR").each(function () {
+                    var row = $(this);
+                    var User = {};
+                    User.QuestionId = row.find("TD INPUT").eq(0).val();
+                    User.Comment = row.find("TD INPUT").eq(1).val();
+                    User.Rating = row.find("TD INPUT").eq(2).val();
+                    if (User.Rating > 5) {
+                        alert("plz Give rating out of 5");
+                        flag = 1;
+                        return false;
+                    }
+                    else {
+                        Users.push(User);
+                        flag = 0;
+                    }
+
+                });
+
+                if (flag == 0) {
+                    Submit(Users);
+
+                }
+
+            });
+            function Submit(Users) {
+                //Send the JSON array to Controller using AJAX.
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SaveForm",
+                    data: JSON.stringify(Users),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+
+                        if (result == true) {
+
+
+                            alert(" Form Submitted Successfully!");
+                            if (id1 != 0) {
+
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Home/RemoveTitleFromUser?id=" + id1,
+
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    success: function (result) {
+
+                                        console.log(id1);
+                                        $('#t_' + id1 + '').remove();
+
+                                        window.location.href = "/Home/FeedBackForm";
+                                    }
+                                });
+                                id1 = 0;
+                            }
+                            $('.form').hide();
+                        }
+
+                    }
+                });
+
+
+
+            }
+
+        </script>
+</body>
+</html>

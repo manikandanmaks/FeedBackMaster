@@ -1,0 +1,9 @@
+D:\FeedBackSystem\FeedBackSystem.Common\bin\Debug\FeedBackSystem.Common.dll
+D:\FeedBackSystem\FeedBackSystem.Common\bin\Debug\FeedBackSystem.Common.pdb
+D:\FeedBackSystem\FeedBackSystem.Common\bin\Debug\log4net.dll
+D:\FeedBackSystem\FeedBackSystem.Common\bin\Debug\log4net.xml
+D:\FeedBackSystem\FeedBackSystem.Common\obj\Debug\FeedBackSystem.Common.csproj.CoreCompileInputs.cache
+D:\FeedBackSystem\FeedBackSystem.Common\obj\Debug\FeedBackSystem.Common.csproj.CopyComplete
+D:\FeedBackSystem\FeedBackSystem.Common\obj\Debug\FeedBackSystem.Common.dll
+D:\FeedBackSystem\FeedBackSystem.Common\obj\Debug\FeedBackSystem.Common.pdb
+D:\FeedBackSystem\FeedBackSystem.Common\obj\Debug\FeedBackSystem.Common.csprojAssemblyReference.cache

@@ -1,0 +1,176 @@
+﻿@model FeedBackSystem.Model.DtoModels.TitleAndQuestions
+@{
+    ViewBag.Title = "Forms";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="~/Scripts/paging.js"></script>
+    <link href="~/Scripts/paging.css" rel="stylesheet" />
+    <style>
+        .btnEdit {
+            color: #423B88;
+
+        }
+        .btnDelete {
+            color: #423B88;
+        }
+        #AddNew {
+            color: white;
+            background-color: #423B88;
+            /*padding: 10px;
+            border-radius: 9px;*/
+        }
+            #AddNew:hover {
+                background-color: #398439;
+            }
+        table {
+            background-color: slategray;
+        }
+        </style>
+</head>
+<body>
+    
+    <div class="container" style="margin-top:3%">
+        <ul class="nav navbar-nav navbar-right">
+
+            <li><a href="~/Home/AddTitles" id="AddNew" class="btn btn-primary" >Add a new Question</a></li>
+        </ul> 
+            </div>
+            <br />
+            <br />
+            <table id="tbldata" class="table table-striped">
+                <thead>
+                    <tr>
+
+                        <th>Forms</th>
+                        <th>Question</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="SetFormsList"></tbody>
+            </table>
+
+            @*Create A PopUp Modal For DeleteConfirmation*@
+
+            <div class="modal fade" id="DeleteConfirmation">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a href="#" class="close" data-dismiss="modal">&times;</a>
+                            <h4>Delete Question</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Are You Sure? You Want To Delete This Question.</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                            <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+
+    @*Create A Popup Modal With Registration Form For Add Or Edit Users Record*@
+
+    <div class="modal fade" id="MyModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 id="ModalTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form">
+                        <fieldset id="SubmitForm">
+                            @Html.HiddenFor(m =>m.QuestionId, new { @id = "QuestionId" })
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Question, new { @id = "Question", @class = "form-control", @placeholder = "Question" })
+                            </div>
+
+                            <div class="form-group">
+                                <a href="#" class="btn btn-block btn-danger" id="SaveUserRecord">Save</a>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pagination-page"></div>
+
+    <script>
+        $.get("/Home/GetFormsList", null, DataBind);
+        function DataBind(FormsList) {
+            $.template('newData', '<tr class="row_${QuestionId}">\
+                 <td>${Title}</td>\
+                <td>${ Question }</td>\
+                <td><a href="#"  class="btnEdit" onclick="EditUserRecord( ${QuestionId} )" > <i class="glyphicon glyphicon-edit"></i></a></td>\
+                <td><a href="#" class="btnDelete" onclick="DeleteUserRecord( ${QuestionId})"> <i class="glyphicon glyphicon-remove"></i></a></td>\
+                </tr>');
+            $.tmpl('newData', FormsList).appendTo('#SetFormsList');
+            $('#tbldata').paging({ limit: 5 });
+        }
+
+       
+        $("#SaveUserRecord").click(function () {
+            var data = $("#SubmitForm").serialize();
+            $.ajax({
+                type: "Post",
+                url: "/Home/SaveDataInDatabase",
+                data: data,
+                success: function (result) {
+                    alert("Success!..");
+                    window.location.href = "/Home/Forms";
+                    $("#MyModal").modal("hide");
+
+                }
+            })
+
+
+        })
+
+        //Show The Popup Modal For DeleteComfirmation
+        var DeleteUserRecord = function (QuestionId) {
+            $("#QuestionId").val(QuestionId);
+            $("#DeleteConfirmation").modal("show");
+        }
+        var ConfirmDelete = function () {
+            var QuestionId = $("#QuestionId").val();
+            $.ajax({
+                type: "POST",
+                url: "/Home/DeleteQuestion?QuestionId=" + QuestionId,
+                success: function (result) {
+                    $("#DeleteConfirmation").modal("hide");
+                    $(".row_" + QuestionId).remove();
+                    window.location.href = "/Home/Forms";
+                }
+            })
+        }
+        //Show The Popup Modal For Edit Student Record
+
+        function EditUserRecord(QuestionId) {
+            var url = "/Home/GetFormById?QuestionId=" + QuestionId;
+            $("#ModalTitle").html("Update Question ");
+            $("#MyModal").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (obj) {
+                    $("#QuestionId").val(obj.QuestionId);
+                    $("#Question").val(obj.Question);
+                   
+                }
+            })
+        }
+    </script>
+
+</body>
+</html>
+

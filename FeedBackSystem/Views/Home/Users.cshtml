@@ -1,0 +1,188 @@
+﻿@model FeedBackSystem.Model.DtoModels.AssignedTitles
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <script src="~/Scripts/paging.js"></script>
+    <link href="~/Scripts/paging.css" rel="stylesheet" />
+    <style>
+        #danger {
+           
+            color: #423B88;
+        }
+        #waring {
+            
+           color: #423B88;
+        }
+        #Addnew {
+            background-color: #423B88;
+            color: white;
+            margin-right: 17px;
+        }
+            #Addnew:hover {
+                background-color: #398439;
+            }
+        table {
+            background-color: slategray;
+        }
+        </style>
+</head>
+<body>
+    <h2>Users</h2>
+    <div class="container" style="margin-top:3%">
+        <ul class="nav navbar-nav navbar-right">
+
+            <li><a href="~/Account/Register?t=1" id="Addnew" class="btn btn-primary">Add a new User</a></li>
+        </ul>
+        <br />
+        <br />
+        <br/>
+        <table id="tbldata" class="table table-striped">
+            <thead>
+                <tr>
+
+
+                    <th>User Name</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="SetUsersList"></tbody>
+        </table>
+
+        @*Create A PopUp Modal For DeleteConfirmation*@
+
+        <div class="modal fade" id="DeleteConfirmation">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4>Delete User</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are You Sure? You Want To Delete This User.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Create A Popup Modal With Registration Form For Add Or Edit Users Record*@
+
+    <div class="modal fade" id="MyModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 id="ModalTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form">
+                        <fieldset id="SubmitForm">
+                            @Html.HiddenFor(m => m.UserId, new { @id = "UserId" })
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.User, new { @id = "User", @class = "form-control", @placeholder = "User" })
+                            </div>
+
+                            <div class="form-group">
+                                <a href="#" class="btn btn-block btn-danger" id="SaveUserRecord">Save</a>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pagination-page"></div>
+
+    <script>
+        $.get("/Home/GetUsersList", null, DataBind);
+        function DataBind(UserList) {
+            $.template('newData', '<tr class="row_${RefId}">\
+                <td>${ User }</td>\
+                <td><a href="#" id="waring" class="btn - warning" onclick="EditUserRecord(${RefId})" > <i class="glyphicon glyphicon-edit"></i></a></td>\
+                <td><a href="#" id="danger" class="btn btn - danger" onclick="DeleteUserRecord(${RefId})"> <i class="glyphicon glyphicon-remove"></i></a></td>\
+                </tr>');
+            $.tmpl('newData', UserList).appendTo('#SetUsersList');
+
+            //var SetData = $("#SetUsersList");
+            //for (var i = 0; i < UserList.length; i++) {
+            //    var Data = "<tr class='row_" + UserList[i].UserId + "'>" +
+            //        "<td>" + UserList[i].User + "</td>" +                
+            //        "<td>" + "<a class='btn btn-warning' onclick='EditUserRecord(" + UserList[i].RefId + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+            //        "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteUserRecord(" + UserList[i].RefId + ")'><span class='glyphicon glyphicon-remove'></span></a>" + "</td>" +
+            //        "</tr>";
+            //    SetData.append(Data);
+             
+
+            //}
+
+
+            $('#tbldata').paging({ limit: 5 });
+        }
+
+
+        $("#SaveUserRecord").click(function () {
+            var data = $("#SubmitForm").serialize();
+            $.ajax({
+                type: "Post",
+                url: "/Home/SaveDataInDatabase1",
+                data: data,
+                success: function (result) {
+                    alert("Success!..");
+                    window.location.href = "/Home/Users";
+                    $("#MyModal").modal("hide");
+
+                }
+            })
+
+
+        })
+
+        //Show The Popup Modal For DeleteComfirmation
+        var DeleteUserRecord = function (RefId) {
+            $("#UserId").val(RefId);
+            $("#DeleteConfirmation").modal("show");
+        }
+        var ConfirmDelete = function () {
+            var UserId = $("#UserId").val();
+            $.ajax({
+                type: "POST",
+                url: "/Home/DeleteUser?RefId="+ UserId+"",
+                success: function (result) {
+                    $("#DeleteConfirmation").modal("hide");
+                    $(".row_" + UserId).remove();
+                    window.location.href = "/Home/Users";
+                }
+            })
+        }
+        //Show The Popup Modal For Edit Student Record
+
+        function EditUserRecord(RefId) {
+            var url = "/Home/GetUserById?RefId=" + RefId+"";
+            $("#ModalTitle").html("Update user ");
+            $("#MyModal").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (obj) {
+                    $("#UserId").val(obj.UserId);
+                    $("#User").val(obj.User);
+
+                }
+            })
+        }
+    </script>
+
+</body>
+</html>

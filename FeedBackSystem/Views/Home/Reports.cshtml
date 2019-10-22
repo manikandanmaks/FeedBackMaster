@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<html>
+<head>
+    <title></title>
+    <style>
+        
+        .scroll {
+            overflow: auto;
+            height: auto;
+        }
+
+        ol {
+            list-style-type: none;
+            width: 170px;
+            height: 480px;
+        }
+
+        .k li {
+            height: 30px;
+            width: 150px;
+            border: 1px solid white;
+            margin: 2px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #Users li {
+            background-color: lightgreen;
+        }
+
+        #Titles li {
+            background-color: lightgreen;
+        }
+
+        fieldset {
+            float: left;
+            margin: 30px;
+            width: 200px;
+            height: 500px;
+            border: 1px solid black;
+        }
+
+        #b button {
+            width: 141px;
+            height: 34px;
+            background-color: #5cb85c;
+            border-radius: 8px;
+        }
+
+
+        form label {
+            display: inline-block;
+            width: 100px;
+        }
+
+
+        .error {
+            color: red;
+            margin-left: 5px;
+        }
+
+        label.error {
+            display: inline;
+        }
+        legend {
+            display: block;
+            width: 82%;
+            padding: 0;
+            margin-bottom: 20px;
+            font-size: 21px;
+            line-height: inherit;
+            color: #333;
+            border: 0;
+            border-bottom: 1px solid #e5e5e5;
+            margin-left: 18px;
+        }
+        b {
+            font-weight: bold;
+            margin: 45px;
+        }
+        .btn {
+            background-color: #423B88;
+            color:white;
+            width:100px;
+        }
+    </style>
+    <script src="~/Scripts/jquery.multiDownload.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "/Home/AllTitles",
+                success: function (result) {
+                    $.template('newData2', '&nbsp;&nbsp;&nbsp;&nbsp;<a id="t_${TitleId}"  class="btn btn-success" onclick="GenerateExcel(${TitleId})"" ><span>${Title}</span></a><br /><br />');
+                    $.tmpl('newData2', result).appendTo('#Titles');
+
+                }
+            })
+        });
+
+        function GenerateExcel(TitleId) {
+            var url = "/Home/GenerateExcel?TitleId=" + TitleId +"";
+            $.ajax({
+                type: "GET",
+                url: url,
+                contentType: "application/x-www-form-urlencoded;charset=ISO-8859-15",
+                success: function (obj) {
+                    window.location.href = "http://www.feedbackmaster.com/Excel/Reports.xlsx";
+               
+                }
+            })
+      
+
+
+        }
+
+      
+
+    </script>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-4">
+            <fieldset class="scroll" id="f2">
+            <legend><b>Forms</b></legend>
+            <ol id="Titles"></ol>
+            </fieldset>
+        </div>
+    </div>
+
+
+</body>
+</html>
+
+

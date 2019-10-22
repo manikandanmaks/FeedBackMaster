@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "GetFormsPerUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script>
+        $(function () {
+            $('#jstree').on('changed.jstree', function (e, data) {
+               
+            }).jstree({
+                "core": {
+                    "themes": {
+                        "icons": false,
+                        
+                    },
+                    "data": @Html.Raw(ViewBag.Json)
+                    
+                    },
+                "checkbox": {
+
+                    "keep_selected_style": false,
+
+                },
+
+                "plugins": ["wholerow", "checkbox"],
+
+               
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+    <h2 style="color:black ">Form List Per User</h2>
+    <br />
+    <br />
+
+
+    <div id="jstree">
+    </div>
+
+</body>
+</html>
+

@@ -1,0 +1,165 @@
+﻿
+@{
+    ViewBag.Title = "AssignRolesToUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <title></title>
+    <style>
+
+        .scroll {
+            overflow: auto;
+            height: auto;
+        }
+
+        ol {
+            list-style-type: none;
+            width: 170px;
+            height: 480px;
+        }
+
+        .k li {
+            height: 30px;
+            width: 150px;
+            border: 1px solid white;
+            margin: 2px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #Users li {
+            background-color: lightgreen;
+        }
+
+        #Roles li {
+            background-color: lightgreen;
+        }
+
+        fieldset {
+            float: left;
+            margin: 30px;
+            width: 200px;
+            height: 500px;
+            border: 1px solid black;
+        }
+
+        #b button {
+            width: 141px;
+            height: 34px;
+            background-color: #5cb85c;
+            border-radius: 8px;
+        }
+
+
+        form label {
+            display: inline-block;
+            width: 100px;
+        }
+
+
+        .error {
+            color: red;
+            margin-left: 5px;
+        }
+
+        label.error {
+            display: inline;
+        }
+    </style>
+
+
+    <script>
+        $(document).ready(function () {
+
+
+            $('#Users').sortable({ connectWith: "#SelectedUsers" });
+            $('#SelectedUsers').sortable({ connectWith: "#Users" });
+            $('#Roles').sortable({ connectWith: "#SelectedRole" });
+            $('#SelectedRole').sortable({ connectWith: "#Roles" });
+
+            $.ajax({
+                type: "GET",
+                url: "/Base/GetAllUsers1",
+                success: function (result) {
+                    $.template('newData1', '<br><li class="k" id="${UserId}">${User}</li>');
+                    $.tmpl('newData1', result).appendTo('#Users');
+
+                }
+            })
+
+            $.ajax({
+                type: "GET",
+                url: "/Base/GetAllRoles",
+                success: function (result) {
+                    $.template('newData2', '<br><li class="k" id="${RoleId}">${Role}</li>');
+                    $.tmpl('newData2', result).appendTo('#Roles');
+
+                }
+            })
+        });
+
+        function AssignRole()
+        {        
+                var AssignedRole = new Array();
+                $("#f3 ol li").each(function () {
+                    var row = $(this);
+                    $("#f4 ol li ").each(function () {
+                        var title = {};
+                        title.UserId = row.attr("id");
+                        title.RoleId = $(this).attr("id");
+                        AssignedRole.push(title);
+                    });
+
+                });
+
+            if (AssignedRole.length < 1)
+            {
+                    $('#div1').html('<span class="error">please Assign Roles to the Users</span>');
+            }
+            else if (AssignedRole.length > 1)
+            {
+                    $('#div1').html('<span class="error">please Assign a single role to User</span>');
+            }
+            else
+            {
+                    $(".error").empty();
+                    $.ajax({
+                        type: "Post",
+                        url: "/Base/SaveSelectedUsers1",
+                        data: JSON.stringify(AssignedRole),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (result)
+                        {
+                            alert("Successfully assigned.");
+                            window.location.href = "/Base/AssignRolesToUsers";
+                        }
+                    })
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="div1"></div>
+
+    <fieldset class="scroll" id="f1">
+        <legend><b>Users</b></legend>
+        <ol id="Users"></ol>
+    </fieldset>
+
+    <fieldset class="scroll" id="f2">
+        <legend><b>Roles</b></legend>
+        <ol id="Roles"></ol>
+    </fieldset>
+    <fieldset class="scroll" id="f3">
+        <legend><b>Selected Users</b></legend>
+        <ol id="SelectedUsers"></ol>
+    </fieldset>
+    <fieldset class="scroll" id="f4">
+        <legend><b>Selected Role</b></legend>
+        <ol id="SelectedRole"></ol>
+    </fieldset>
+    <button href="#" onclick="AssignRole()" class="btn btn-success" id="b">Assign </button>
+</body>
+</html>

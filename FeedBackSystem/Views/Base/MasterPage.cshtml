@@ -1,0 +1,271 @@
+﻿
+@{
+    ViewBag.Title = "MasterPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <style>
+        .btn-success {
+            color: #fff;
+            background-color: #423B88;
+            border-color: #423B88;
+        }
+
+        #p1 {
+            color: black;
+            font-family: Bahnschrift;
+            font-size: 18px;
+        }
+
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .table {
+            border: 1px solid ridge;
+            border-collapse: collapse;
+            color: crimson;
+        }
+
+            .table th {
+                background-color: #F7F7F7;
+                color: brown;
+                font-weight: bold;
+            }
+
+            .table th, .table td {
+                padding: 5px;
+                border: 1px solid #ccc;
+            }
+
+        #txtQuestion {
+            max-width: 735px;
+        }
+
+        form label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        form div {
+            margin-bottom: 1px;
+        }
+
+        .error {
+            color: red;
+            margin-left: 5px;
+        }
+
+        label.error {
+            display: inline;
+        }
+        .slide-content {
+            padding-top: 180px;
+            text-size-adjust: 50%;
+            font: 35px Montserrat, sans-serif;
+        }
+        p:hover {
+            animation: shake 0.5s;
+            animation-iteration-count: infinite;
+        }
+
+        @@-webkit-keyframes shake {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(3px, 1px) rotate(-1deg);
+            }
+
+            80% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+        }
+    </style>
+
+    <script src="~/Scripts/script.js"></script>
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+
+    <br />
+    <br />
+
+    <div class="slide_box">
+        <ul class="slide_pic">
+            <li style="text-align:center;color:#423B88"><p class="slide-content">You can Create a New Company</p></li>
+            <li style="text-align:center;color:#423B88"><p class="slide-content">You can Create  New  Administrator's</p></li>
+            <li style="text-align:center;color:#423B88"><p class="slide-content">You can Assign Admin to Company </p></li>
+
+        </ul>
+        <ul class="slide_tab"></ul>
+        <a href="javascript:" class="slide_nav slide_prev" style="color:#423B88">&lt;</a>
+        <a href="javascript:" class="slide_nav slide_next" style="color:#423B88">&gt;</a>
+    </div>
+
+    <br />
+    <br />
+
+    <br />
+    <br />
+
+    <br />
+    <br />
+
+
+    <div class="row">
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <div class="col-md-4">
+            <p class="btn btn-" id="p1"><span class="glyphicon glyphicon-share-alt"></span> &nbsp;&nbsp;&nbsp; Click This Button to Create A <br /> <b> New Company</b>...</p>
+        </div>
+
+        <div id="c" class="col-md-4">
+            <a id="a" class=" btn btn-success">Create New company</a>
+            <div id="companybox" class="col-md-4">
+                <form id="form">
+                    <fieldset id="title">
+                        <div class="row">
+                            <br />
+                            <div class="col-md-4">
+
+                                <br /> <p id="p1">Enter New CompanyName</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input placeholder="Company Name" id="company" type="text" class="form-control" name="txt1" required />
+                        </div>
+                        <div class="form-group">
+                            <a href="#" class="btn btn-success" id="Save">Save Company</a>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+                <button class="btn btn-success" id="cancel1">cancel</button>
+
+            </div>
+        </div>
+        @*<div class="col-md-4">
+                <p class="btn btn-" id="p1"> Click This Button to Create A <br /> <b> AssignRoles To Users</b>...</p>
+            </div>*@
+
+        <br />
+        <br /><br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+
+    </div>
+    <hr />
+    <div class="row">
+
+        <div class="col-md-4">
+            <p id="p1"><span class="glyphicon glyphicon-share-alt"></span> &nbsp;&nbsp;&nbsp; Click This Button to Assign  <b>Admin's</b> to <b>Company</b>...</p>
+        </div>
+        <br />
+        @*<div class="col-md-4">@Html.ActionLink("AssignRoles To Users", "AssignRolesToUsers", "Base", new { @class = "btn btn-success" })</div>*@
+        <div class="col-md-4">@Html.ActionLink("Assign Admin's to company", "AssignUsersToCompany", "Base", new { @class = "btn btn-success" })</div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#c').show();
+            $('#companybox ').hide();
+            $(".slide_box").init_slide();
+        });
+        $('.selectall').click(function () {
+            if ($(this).is(':checked')) {
+                $('div input').attr('checked', true);
+            } else {
+                $('div input').attr('checked', false);
+            }
+        });
+        $("#c").click(function () {
+            $('#a').hide();
+            $('#companybox ').show();
+        })
+        $("#cancel1").click(function () {
+
+            window.location.href = "/Base/MasterPage";
+        })
+
+        $("#Save").click(function () {
+
+            var t = $('#company').val();
+            $(".error").remove();
+            if (t.length < 1) {
+
+                $('#company').after('<span class="error">please enter CompanyName</span>');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/Base/SaveCompany?txt1=" + t,
+                    success: function (result) {
+                        if (result == true) {
+                            window.alert('Company created successfully');
+
+                            window.location.href = "/Base/MasterPage";
+                        }
+                    }
+                })
+            }
+        })
+    </script>
+
+</body>
+</html>
+

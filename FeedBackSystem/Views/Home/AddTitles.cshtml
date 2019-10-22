@@ -1,0 +1,316 @@
+﻿@model IEnumerable<FeedBackSystem.Model.DtoModels.TitleAndQuestions>
+@{
+    ViewBag.Title = "AddTitles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<head>
+    <style type="text/css">
+        .p1 {
+            color: slateblue;
+            font-family: Bahnschrift;
+            font-size: 15px;
+        }
+
+       
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .table {
+            border: 1px solid ridge;
+            border-collapse: collapse;
+            color: crimson;
+        }
+
+            .table th {
+                background-color: #F7F7F7;
+                color: brown;
+                font-weight: bold;
+            }
+
+            .table th, .table td {
+                padding: 5px;
+                border: 1px solid #ccc;
+            }
+
+        #txtQuestion {
+            max-width: 735px;
+        }
+        form label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        form div {
+            margin-bottom: 1px;
+        }
+
+        .error {
+            color: red;
+            margin-left: 5px;
+        }
+
+        label.error {
+            display: inline;
+        }
+        .btn {
+            background-color: #423B88;
+            color:white;
+        }
+        .btn:hover{
+            background-color:forestgreen;
+        }
+    </style>
+
+   
+</head>
+<body>
+    <div class="titlebox">
+        <form id="form">
+            <fieldset id="title">
+
+                <div class="row">
+
+                    <br />
+
+
+
+
+
+                    <div class="col-md-4">
+                        <p> <b>STEP 1: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        <br /> <p class="p1">Enter the  New Title <br /> For <b> FeedBack Form</b>...</p>
+                    </div>
+
+                   
+                </div>
+
+                <div class="form-group">
+
+                    <input placeholder="Title" id="title1" type="text" class="form-control" name="txt1" required />
+                </div>
+
+
+                <div class="form-group">
+                    <a href="#" class="btn btn-success" id="Save">Proceed To Step 2</a>
+                </div>
+
+
+            </fieldset>
+        </form>
+        <br />
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <b>  STEP 2 :</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <br />
+                <br />
+
+                <p class="p1">Assign <b>Feed Back<br /> Forms</b> To the Users.. </p>
+            </div>
+
+        </div>
+    </div>
+
+    <br />
+
+
+    <div class="questions">
+        <div class="row">
+            <div class="col-md-4">
+                <p style="font-style:italic;font-size:medium"> <b>Instruction: </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p><br />
+                 <p class="p1">Enter the  New Question For <b> FeedBack Form</b>...</p><br />
+                <p class="p1"> Next Click Add Button To Save Question.</p><br />
+                <p class="p1"> Next Click <b> Add New Question Button</b> to add new  Question.</p><br />
+                <p class="p1"> Finally Click <b>Save All Question</b> button to save the Questions.</p><br />
+            </div>
+        </div>
+
+        <div id="div1"></div>
+        <div><input id="addbtn" class="btn btn-success" style="float:right" type="button" value="Add New Question" /></div>
+        <br />
+        <br />
+
+        <table id="tblQuestions" class="table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th style="width:150px">Question</th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var question in Model)
+                {
+                    <tr>
+                        <td>@question.Question</td>
+
+                        <td><input type="button" value="Remove" onclick="Remove(this)" class="btn btn-success" /></td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot id="tfoot">
+                <tr>
+                    <td><input type="text" id="txtQuestion" size="100" /></td>
+
+                    <td><input type="button" id="btnAdd" value="Add" class="btn btn-success" /></td>
+                </tr>
+            </tfoot>
+        </table>
+        <br />
+        <input type="button" class="btn btn-success" id="btnSave" value="Save All Questions" />
+
+
+    </div>
+
+
+    <script>
+        $('.titlebox').show();
+        $('.questions').hide();
+
+        $("#Save").click(function () {
+           
+            var t = $('#title1').val();
+            $(".error").remove();
+            var t1;
+            $.ajax({
+                type: "GET",
+                url: "/Home/GetCompanyId",
+                async: false,
+                success: function (result) {
+                    if (result != null) {
+                        t1 = result;
+                       
+                    }
+                }
+            })
+
+            if ( t1 == "")
+            {
+                $('#title1').after('<span class="error">Before save title please assign this user to some company</span>');
+            }
+            else if (t.length < 1)
+            {
+                $('#title1').after('<span class="error">please enter Title</span>');
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SaveTitle",
+                    async: false,
+                    data: { txt1: $("#title1").val() },
+                    success: function (result) {
+                        if (result == true) {
+
+                            $('.titlebox').hide();
+
+                            $('.questions').show();
+
+                        }
+                    }
+                })
+            }
+        })
+
+        $('#tfoot').hide();
+        $('#addbtn').click(function () {
+            $('#tfoot').toggle();
+        });
+
+
+        $("body").on("click", "#btnAdd", function () {
+            //hidding
+            $('tfoot').hide();
+            //Reference the Name and Country TextBoxes.
+            var txtQuestion = $("#txtQuestion");
+            var t = $('#txtQuestion').val();
+            $(".div1").remove();
+            if (t.length < 1) {
+               
+                $('#div1').html('<span class="error">please enter Question</span>');
+            }
+            else {
+                $(".error").empty();
+                //Get the reference of the Table's TBODY element.
+                var tBody = $("#tblQuestions > TBODY")[0];
+
+                //Add Row.
+                var row = tBody.insertRow(-1);
+
+                //Add Name cell.
+                var cell = $(row.insertCell(-1));
+                cell.html(txtQuestion.val());
+
+                //Add Button cell.
+                cell = $(row.insertCell(-1));
+                var btnRemove = $("<input />");
+                btnRemove.attr("type","button");
+                btnRemove.attr("onclick", "Remove(this);");
+                btnRemove.val("Remove");
+                cell.append(btnRemove);
+
+                //Clear the TextBoxes.
+                txtQuestion.val("");
+            }
+
+        });
+
+        function Remove(button) {
+            //Determine the reference of the Row using the Button.
+            var row = $(button).closest("TR");
+            var name = $("TD", row).eq(0).html();
+            if (confirm("Do you want to delete: " + name)) {
+                //Get the reference of the Table.
+                var table = $("#tblQuestions")[0];
+
+                //Delete the Table row using it's Index.
+                table.deleteRow(row[0].rowIndex);
+            }
+        };
+
+        $("body").on("click", "#btnSave", function () {
+            //Loop through the Table rows and build a JSON array.
+            var Users = new Array();
+            $("#tblQuestions TBODY TR").each(function () {
+                var row = $(this);
+                var User = {};
+                User.Question = row.find("TD").eq(0).html();
+
+                Users.push(User);
+            });
+            if (Users.length < 1) {
+                $('#div1').html('<span class="error">please add Question</span>');
+            }
+            else {
+                $(".error").empty();
+                //Send the JSON array to Controller using AJAX.
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SaveResult",
+                    data: JSON.stringify(Users),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result == true) {
+                            window.location.href = "/Home/Index";
+                            alert(" ADDED Successfully!");
+                        }
+
+                    }
+                });
+            }
+        });
+    </script>
+    <br />
+    <br />
+    <br />
+    <br /> <br />
+    <br />
+    <br />
+    <br />
+</body>
